@@ -168,10 +168,11 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        Livewire\LivewireServiceProvider::class,
     ])->toArray(),
 
     /*
-    |--------------------------------------------------------------------------
+    |---------------------------------------------v-----------------------------
     | Class Aliases
     |--------------------------------------------------------------------------
     |
@@ -183,6 +184,8 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
+        'Livewire' => Livewire\Livewire::class,
+
     ])->toArray(),
 
 ];

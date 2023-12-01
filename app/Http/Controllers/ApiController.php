@@ -12,13 +12,19 @@ class ApiController extends Controller
      */
     public function index()
     {
+            $limit = 8; // Cantidad de Pokémon por página
+            $page = request()->input('page', 1);
 
-         // Realiza una solicitud HTTP a la API de Pokémon para obtener la lista
-         $response = Http::get('https://pokeapi.co/api/v2/pokemon?limit=8');
+            // Realiza una solicitud HTTP a la API de Pokémon para obtener la lista
+            $response = Http::get("https://pokeapi.co/api/v2/pokemon", [
+                'limit' => $limit,
+                'offset' => ($page - 1) * $limit,
+            ]);
 
          if($response->successful()){
+            $data = $response->json();
              // Extrae la lista de Pokémon de la respuesta JSON
-             $pokemonList = $response->json()['results'];
+             $pokemonList = $data['results'];
             //  dd($pokemonList);
 
             // Obtener la URL directa de la imagen para cada Pokémon
@@ -30,7 +36,7 @@ class ApiController extends Controller
                 // Obtener todos los tipos del Pokémon
                 $types = [];
                 foreach ($pokemonDetails['types'] as $typeData) {
-                    // $types[] = $typeData['type']['name'];
+
                     // Obtener el nombre del tipo en español haciendo una solicitud a la API de tipos
                     $typeDetailsResponse = Http::get($typeData['type']['url']);
                     if($typeDetailsResponse->successful()){
@@ -50,7 +56,7 @@ class ApiController extends Controller
             }
             //  dd($pokemonDetails);
 
-            return view('pokemonviews.index', compact('pokemonList'));
+            return view('pokemonviews.index', compact('pokemonList', 'page'));
 
 
          }else{
