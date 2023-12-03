@@ -25,6 +25,10 @@ class ApiController extends Controller
             $data = $response->json();
              // Extrae la lista de Pokémon de la respuesta JSON
              $pokemonList = $data['results'];
+
+             foreach($pokemonList as &$Letras){
+                $Letras['nombre']= strtoupper(substr($Letras['name'], 0, 1)) . substr($Letras['name'], 1);
+             }
             //  dd($pokemonList);
 
             // Obtener la URL directa de la imagen para cada Pokémon
