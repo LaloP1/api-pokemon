@@ -26,10 +26,12 @@ class ApiController extends Controller
              // Extrae la lista de Pokémon de la respuesta JSON
              $pokemonList = $data['results'];
 
+            //  dd($data);
+
              foreach($pokemonList as &$Letras){
                 $Letras['nombre']= strtoupper(substr($Letras['name'], 0, 1)) . substr($Letras['name'], 1);
              }
-            //  dd($pokemonList);
+
 
             // Obtener la URL directa de la imagen para cada Pokémon
             foreach ($pokemonList as &$pokemon) {
@@ -96,6 +98,11 @@ class ApiController extends Controller
         if ($response->successful()) {
             $pokemon = $response->json();
 
+
+
+            $pokemon['name']= strtoupper(substr($pokemon['name'], 0, 1)) . substr($pokemon['name'], 1);
+
+            // dd($pokemon);
            // Obtener la descripción de la especie en español
            $speciesResponse = Http::get($pokemon['species']['url']);
 
