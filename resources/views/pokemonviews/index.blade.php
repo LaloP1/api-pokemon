@@ -12,12 +12,7 @@
                                     <div>
                                         <p class="font-geologica opacity-[0.5] text-[15px] not-italic tracking-normal">No: {{ $pokemon['p_id'] }}</p>
                                         <h3 class="font-medium not-italic text-[22px] font-geologica tracking-normal">{{ $pokemon['nombre'] }}</h3>
-                                        @foreach ($pokemon['types'] as $type )
-                                            <div>
-                                                <p class="not-italic text-[10px] font-geologica tracking-normal opacity-[1]">{{ $type }}</p>
-                                                {{-- <p>Tipos: {{ implode(', ', $pokemon['types']) }}</p> --}}
-                                            </div>
-                                        @endforeach
+                                        <x-tipos :pokemon="$pokemon" />
                                     </div>
                                 </div>
                             </a>
