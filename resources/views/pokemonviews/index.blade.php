@@ -2,7 +2,7 @@
     <main class="items-center mx-auto max-w-screen-xl p-4">
         <h1 class="text-3xl text-lime-400">Pokémon List</h1>
         <section class="flex flex-wrap justify-center mx-auto">
-                    @foreach($pokemonList as $pokemon)
+                    @foreach($pokemonListPaginated as $pokemon)
                         <div class="w-full sm:w-1/2 md:w-1/2 lg:w-[20%] xl:w-[20%] p-4 m-4 bg-[#FFFFFF] rounded-[12px] shadow-nv hover:border  hover:border-[#3A72F5] transition-transform hover:transform hover:-translate-y-2">
                             <a href="{{ route('pokemon.show',  $pokemon['p_id']) }}">
                                 <div>
@@ -20,18 +20,32 @@
                     @endforeach
         </section>
 
-        <div class="">
-            <ul class="">
-                <li>
-                    @if ($page > 1)
-                        <a href="{{ route('pokemon.index', ['page' => $page - 1]) }}" class="text-xl"><i class="fa-solid fa-arrow-left"></i>Página anterior</a>
-                    @endif
-                </li>
-                <li>
-                    <a href="{{ route('pokemon.index', ['page' => $page + 1]) }}" class="text-xl">Siguiente página<i class="fa-solid fa-arrow-right"></i></a>
-                </li>
-            </ul>
-        </div>
+            <!-- INICIO DE NAVEGACION -->
+
+            <div class="flex justify-between border-t border-gray-200 bg-[#F5F8FA] mt-[42px] px-4 py-3 sm:px-6">
+                <div class="sm:flex sm:flex-1 sm:items-center sm:justify-between">
+                    <div>
+                        <p class="text-sm text-gray-700">
+                            Pagina
+                            <span class="font-medium">{{ $pokemonListPaginated->currentPage() }}</span>
+                        </p>
+                    </div>
+
+                    <div>
+                        <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+                            @if ($pokemonListPaginated->previousPageUrl())
+                                <a href="{{ $pokemonListPaginated->previousPageUrl() }}" class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 transition ease-in-out duration-150">
+                                    Anterior
+                                </a>
+                            @endif
+
+                                <a href="{{ route('pokemon.index', ['page' => $pokemonListPaginated->currentPage() + 1]) }}" class="relative ml-3 inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 transition ease-in-out duration-150">
+                                    Siguiente
+                                </a>
+                        </nav>
+                    </div>
+                </div>
+            </div>
     </main>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="{{ asset('js/loader.js') }}"></script>

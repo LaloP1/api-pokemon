@@ -9,10 +9,6 @@ use App\Http\Controllers\ApiController;
 // use Livewire\Livewire;
 
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Route::resource('/pokemon', ApiController::class);
 
 // Utiliza el método `livewire` directamente

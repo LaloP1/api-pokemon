@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 class ApiController extends Controller
 {
@@ -12,13 +14,13 @@ class ApiController extends Controller
      */
     public function index()
     {
-            $limit = 8; // Cantidad de Pokémon por página
+            $perPage = 8; // Cantidad de Pokémon por página
             $page = request()->input('page', 1);
 
             // Realiza una solicitud HTTP a la API de Pokémon para obtener la lista
             $response = Http::get("https://pokeapi.co/api/v2/pokemon", [
-                'limit' => $limit,
-                'offset' => ($page - 1) * $limit,
+                'limit' => $perPage,
+                'offset' => ($page - 1) * $perPage,
             ]);
 
          if($response->successful()){
@@ -59,8 +61,16 @@ class ApiController extends Controller
                 }
                 $pokemon['types'] = $types;
             }
+
+            $pokemonListPaginated = new LengthAwarePaginator(
+                $pokemonList,
+                count($pokemonDetails),
+                $perPage,
+                $page,
+                ['path' => request()->url(), 'query' => request()->query()]
+            );
             //  dd($pokemonDetails);
-            return view('pokemonviews.index', compact('pokemonList', 'page'));
+            return view('pokemonviews.index', ['pokemonListPaginated' => $pokemonListPaginated]);
          }else{
             // Manejar el error si la solicitud a la API falla
             return response()->json(['error' => 'No se pudo obtener información del Pokémon'], $response->status());
