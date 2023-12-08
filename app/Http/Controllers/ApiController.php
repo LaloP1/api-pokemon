@@ -14,27 +14,19 @@ class ApiController extends Controller
      */
     public function index()
     {
-            $perPage = 8; // Cantidad de Pokémon por página
-            $page = request()->input('page', 1);
+        $perPage = 8; // Cantidad de Pokémon por página
+        $page = request()->input('page', 1);
 
-            // Realiza una solicitud HTTP a la API de Pokémon para obtener la lista
-            $response = Http::get("https://pokeapi.co/api/v2/pokemon", [
-                'limit' => $perPage,
-                'offset' => ($page - 1) * $perPage,
-            ]);
+        // Realiza una solicitud HTTP a la API de Pokémon para obtener la lista
+        $response = Http::get("https://pokeapi.co/api/v2/pokemon",[
+            'limit' => $perPage,
+            'offset' => ($page - 1) * $perPage,
+        ]);
 
-         if($response->successful()){
+        if($response->successful()){
             $data = $response->json();
              // Extrae la lista de Pokémon de la respuesta JSON
-             $pokemonList = $data['results'];
-
-            //  dd($data);
-
-             foreach($pokemonList as &$Letras){
-                $Letras['nombre']= strtoupper(substr($Letras['name'], 0, 1)) . substr($Letras['name'], 1);
-             }
-
-
+            $pokemonList = $data['results'];
             // Obtener la URL directa de la imagen para cada Pokémon
             foreach ($pokemonList as &$pokemon) {
                 $pokemonDetails = Http::get($pokemon['url'])->json();
@@ -47,7 +39,7 @@ class ApiController extends Controller
                 foreach ($pokemonDetails['types'] as $typeData) {
 
                     // Obtener el nombre del tipo en español haciendo una solicitud a la API de tipos
-                    $typeDetailsResponse = Http::get($typeData['type']['url']);
+                    $typeDetailsResponse = Http::timeout(15)->get($typeData['type']['url']);
                     if($typeDetailsResponse->successful()){
                         $typeDetails = $typeDetailsResponse->json();
                         $typeNames = $typeDetails['names'];
@@ -103,10 +95,13 @@ class ApiController extends Controller
             $pokemon = $response->json();
 
             $pokemon['name']= strtoupper(substr($pokemon['name'], 0, 1)) . substr($pokemon['name'], 1);
-
             // dd($pokemon);
-           // Obtener la descripción de la especie en español
-           $speciesResponse = Http::get($pokemon['species']['url']);
+
+           $prevPokemon = $this->getAdjacentPokemon($id, 'prev');
+           $nextPokemon = $this->getAdjacentPokemon($id, 'next');
+
+            // Obtener la descripción de la especie en español
+           $speciesResponse = Http::timeout(15)->get($pokemon['species']['url']);
 
            if($speciesResponse->successful()){
             $speciesDetails = $speciesResponse->json();
@@ -122,7 +117,7 @@ class ApiController extends Controller
            }
            $types = [];
            foreach($pokemon['types'] as $typeData){
-                $typeDetailsResponse = Http::get($typeData['type']['url']);
+                $typeDetailsResponse = Http::timeout(15)->get($typeData['type']['url']);
                 if($typeDetailsResponse->successful()){
                     $typeDetails = $typeDetailsResponse->json();
                     $typeNames = $typeDetails['names'];
@@ -137,7 +132,7 @@ class ApiController extends Controller
         $typeDamageRelations = $typeDetails['damage_relations'];
 
         foreach ($typeDamageRelations['double_damage_from'] as $weakness) {
-            $weaknessDetailsResponse = Http::get($weakness['url']);
+            $weaknessDetailsResponse = Http::timeout(15)->get($weakness['url']);
 
             if ($weaknessDetailsResponse->successful()) {
                 $weaknessDetails = $weaknessDetailsResponse->json();
@@ -153,7 +148,7 @@ class ApiController extends Controller
         }
     }
 }
-           return view('pokemonviews.show', compact('pokemon', 'description', 'types', 'debilidades'));
+           return view('pokemonviews.show', compact('pokemon', 'description', 'types', 'debilidades', 'nextPokemon', 'prevPokemon'));
         }else{
             return response()->json(['error'=>'No se pudo obtener información del Pokémon'], $response->status());
         }
@@ -182,4 +177,19 @@ class ApiController extends Controller
     {
         //
     }
+
+    private function getAdjacentPokemon($currentId, $direction = 'next'){
+        $offset = ($direction == 'next') ? 1 : -1;
+        $adjacentId = $currentId + $offset;
+
+        // Obtén la información del Pokémon siguiente o anterior
+        $response = Http::timeout(15)->get("https://pokeapi.co/api/v2/pokemon/{$adjacentId}");
+
+        if ($response->successful()) {
+            return $response->json();
+        }
+
+        return null;
+    }
+
 }

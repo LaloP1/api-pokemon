@@ -25,6 +25,32 @@
                         </div>
                     </div>
             </section>
+            <div class="flex justify-between my-[20px]">
+
+                <div class="btnDetallePokemon flex-row-reverse">
+                    <div>
+                        @if ($prevPokemon)
+                            <a href="{{ route('pokemon.show', $prevPokemon['id']) }}">
+                            <p class=" opacity-[0.5] text-[16px] not-italic tracking-normal ">No: 000{{ $pokemon['id'] - 1 }}</p>
+                            <p>{{ $prevPokemon['name'] }}</p>
+                            </a>
+                        @endif
+                    </div>
+                    <span class="w-[10px] h-2 bg-red-500"></span>
+                </div>
+
+                <div class="btnDetallePokemon">
+                    <div class="">
+                        @if ($nextPokemon)
+                            <a href="{{ route('pokemon.show', $nextPokemon['id']) }}">
+                            <p class=" opacity-[0.5] text-[16px] not-italic tracking-normal ">No: 000{{ $pokemon['id'] + 1}}</p>
+                                <p>{{ $nextPokemon['name'] }}</p>
+                            </a>
+                        @endif
+                    </div>
+                    <span class="w-[10px] h-2 bg-red-400"></span>
+                </div>
+            </div>
     </main>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="{{ asset('js/loader.js') }}"></script>

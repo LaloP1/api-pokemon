@@ -11,7 +11,7 @@
                                     </div>
                                     <div>
                                         <p class="font-geologica opacity-[0.5] text-[15px] not-italic tracking-normal">No: {{ $pokemon['p_id'] }}</p>
-                                        <h3 class="font-medium not-italic text-[22px] font-geologica tracking-normal">{{ $pokemon['nombre'] }}</h3>
+                                        <h3 class="font-medium not-italic text-[22px] font-geologica tracking-normal">{{ ucfirst($pokemon['name'])}}</h3>
                                         <x-tipos :pokemon="$pokemon" />
                                     </div>
                                 </div>
