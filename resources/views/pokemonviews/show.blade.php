@@ -26,25 +26,24 @@
                     </div>
             </section>
             <div class="flex justify-between my-[20px]">
-
-                <div class="btnDetallePokemon flex-row-reverse">
-                    <div>
+                <div class=" flex-row-reverse bg-[#ffffff] py-[6px] pl-[10px] rounded-[27px] tracking-normal w-[276px]">
+                    <div class="">
                         @if ($prevPokemon)
                             <a href="{{ route('pokemon.show', $prevPokemon['id']) }}">
-                            <p class=" opacity-[0.5] text-[16px] not-italic tracking-normal ">No: 000{{ $pokemon['id'] - 1 }}</p>
-                            <p>{{ $prevPokemon['name'] }}</p>
+                            <p class=" opacity-[0.5] text-[12px] not-italic tracking-normal " >No: 000{{ $pokemon['id'] - 1 }}</p>
+                            <p class=" font-[500] tracking-normal"><i class="fa-solid fa-chevron-left bg-[#F6F8FA] rounded-full p-1"></i>{{ ucfirst($prevPokemon['name']) }}</p>
                             </a>
                         @endif
                     </div>
                     <span class="w-[10px] h-2 bg-red-500"></span>
                 </div>
 
-                <div class="btnDetallePokemon">
+                <div class=" bg-[#ffffff] py-[6px] pl-[10px] rounded-[27px] tracking-normal w-[276px]">
                     <div class="">
                         @if ($nextPokemon)
                             <a href="{{ route('pokemon.show', $nextPokemon['id']) }}">
-                            <p class=" opacity-[0.5] text-[16px] not-italic tracking-normal ">No: 000{{ $pokemon['id'] + 1}}</p>
-                                <p>{{ $nextPokemon['name'] }}</p>
+                            <p class=" opacity-[0.5] text-[12px] not-italic tracking-normal ">No: 000{{ $pokemon['id'] + 1}}</p>
+                            <p class="font-[500] tracking-normal">{{ ucfirst($nextPokemon['name']) }} <i class="fa-solid fa-chevron-right bg-[#F6F8FA] rounded-full p-1 left-[1130px] flex-row-reverse"></i></p>
                             </a>
                         @endif
                     </div>

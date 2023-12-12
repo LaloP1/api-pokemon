@@ -82,7 +82,18 @@ class ApiController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $nombre = $request->input('nombre');
+
+        // Realiza la lógica de búsqueda en la API aquí
+        $response = Http::get("https://pokeapi.co/api/v2/pokemon/{$nombre}");
+
+        if ($response->successful()) {
+            $pokemon = $response->json();
+
+            return view('pokemonviews.show', compact('pokemon'));
+        } else {
+            return response()->json(['error' => 'No se pudo obtener información del Pokémon'], $response->status());
+        }
     }
 
     /**
@@ -180,7 +191,7 @@ class ApiController extends Controller
 
     private function getAdjacentPokemon($currentId, $direction = 'next'){
         $offset = ($direction == 'next') ? 1 : -1;
-        $adjacentId = $currentId + $offset;
+             $adjacentId = $currentId + $offset;
 
         // Obtén la información del Pokémon siguiente o anterior
         $response = Http::timeout(15)->get("https://pokeapi.co/api/v2/pokemon/{$adjacentId}");

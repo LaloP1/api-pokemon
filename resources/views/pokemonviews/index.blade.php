@@ -1,6 +1,33 @@
     <x-header/>
     <main class="items-center mx-auto max-w-screen-xl p-4">
-        <h1 class="text-3xl text-lime-400">Pokémon List</h1>
+        <section>
+            <div class="grid grid-cols-12 mt-[47px] mb-[32px]">
+
+                <form id="formBuscar" action="{{ route('pokemon.store') }}" method="GET" class="col-start-2 col-span-3">
+                    <p class="font-[geologica] text-[18px] mb-[3px] text-[#060D33]">Nombre o número</p>
+                    <input name="nombre" id="nombre" required class="border border-[#D1D5DB] h-[50px] w-[346px] rounded-[10px]" type="text">
+                </form>
+
+            </div>
+        </section>
+
+        @if(isset($pokemon))
+            <div class="flex justify-center flex-wrap items-center" id="resultados">
+                <a href="{{ route('pokemon.show', $pokemon['id']) }}" class="flex justify-center flex-col items-center mx-3 bg-white my-3 h-[333px] rounded-md w-1/5 ded-[12px] shadow-nv hover:border hover:border-[#3A72F5] transition-transform hover:transform hover:-translate-y-3">
+                    <div>
+                        <img src="{{ $pokemon['sprites']['front_default'] }}" class="w-[212px] h-[212px]" alt="">
+                    </div>
+                    <div class="flex flex-col justify-center w-[212px]">
+                        <p class="opacity-50 font-[geologica] text-[15px]">No: 000{{ $pokemon['id'] }}</p>
+                        <p class="first-letter:uppercase text-[22px] font-[geologica]">{{ $pokemon['name'] }}</p>
+                        <div>
+                            <x-tipos :pokemon="$pokemon" />
+                        </div>
+                    </div>
+                </a>
+            </div>
+        @endif
+
         <section class="flex flex-wrap justify-center mx-auto">
                     @foreach($pokemonListPaginated as $pokemon)
                         <div class="w-full sm:w-1/2 md:w-1/2 lg:w-[20%] xl:w-[20%] p-4 m-4 bg-[#FFFFFF] rounded-[12px] shadow-nv hover:border  hover:border-[#3A72F5] transition-transform hover:transform hover:-translate-y-2">
